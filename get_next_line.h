@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 16:38:48 by natferna          #+#    #+#             */
-/*   Updated: 2024/10/24 09:53:02 by natferna         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:16:38 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <sys/types.h>
+
+# ifndef BUFFER_SIZE
+    # define BUFFER_SIZE 1024
+# endif
 
 char	*get_next_line(int fd);
 size_t	ft_strlen(const char *s);

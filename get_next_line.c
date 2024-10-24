@@ -6,7 +6,7 @@
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 16:40:52 by natferna          #+#    #+#             */
-/*   Updated: 2024/10/24 09:53:50 by natferna         ###   ########.fr       */
+/*   Updated: 2024/10/24 16:16:55 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ char	*get_next_line(int fd)
 {
 	static char	*remainder;
 	char		buf[BUFFER_SIZE + 1];
-	int			read_bytes;
+	ssize_t		read_bytes;
 
 	if (fd < 0)
 		return (NULL);
