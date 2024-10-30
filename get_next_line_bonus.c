@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 16:40:52 by natferna          #+#    #+#             */
-/*   Updated: 2024/10/30 17:09:49 by natferna         ###   ########.fr       */
+/*   Created: 2024/10/30 01:43:02 by natferna          #+#    #+#             */
+/*   Updated: 2024/10/30 17:22:04 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t	ft_strlen(const char *s)
 {
@@ -31,7 +31,7 @@ void	ft_strcat(char *dst, const char *src)
 	*dst = '\0';
 }
 
-static char	*get_line(char **remainder)
+char	*get_line(char **remainder)
 {
 	char	*line;
 	char	*newline_pos;
@@ -59,7 +59,7 @@ static char	*get_line(char **remainder)
 	return (line);
 }
 
-static char	*append_buffer(char *remainder, char *buf)
+char	*append_buffer(char *remainder, char *buf)
 {
 	char	*temp;
 
@@ -72,29 +72,29 @@ static char	*append_buffer(char *remainder, char *buf)
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
+	static char	*remainder[MAX_FD];
 	char		buf[BUFFER_SIZE + 1];
 	int			read_bytes;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || fd >= MAX_FD || BUFFER_SIZE <= 0)
 		return (NULL);
 	read_bytes = read(fd, buf, BUFFER_SIZE);
 	while (read_bytes > 0)
 	{
 		buf[read_bytes] = '\0';
-		remainder = append_buffer(remainder, buf);
-		if (!remainder)
+		remainder[fd] = append_buffer(remainder[fd], buf);
+		if (!remainder[fd])
 			return (NULL);
-		if (ft_strchr(remainder, '\n'))
+		if (ft_strchr(remainder[fd], '\n'))
 			break ;
 		read_bytes = read(fd, buf, BUFFER_SIZE);
 	}
-	if (read_bytes == -1 || (read_bytes == 0 && (!remainder
-				|| remainder[0] == '\0')))
+	if (read_bytes == -1 || (read_bytes == 0 && (!remainder[fd]
+				|| remainder[fd][0] == '\0')))
 	{
-		free(remainder);
-		remainder = NULL;
+		free(remainder[fd]);
+		remainder[fd] = NULL;
 		return (NULL);
 	}
-	return (get_line(&remainder));
+	return (get_line(&remainder[fd]));
 }
