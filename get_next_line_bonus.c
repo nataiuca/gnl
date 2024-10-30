@@ -5,69 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/30 01:43:02 by natferna          #+#    #+#             */
-/*   Updated: 2024/10/30 17:22:04 by natferna         ###   ########.fr       */
+/*   Created: 2024/10/30 23:15:57 by natferna          #+#    #+#             */
+/*   Updated: 2024/10/30 23:25:01 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-size_t	ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (s[len])
-		len++;
-	return (len);
-}
-
-void	ft_strcat(char *dst, const char *src)
-{
-	while (*dst)
-		dst++;
-	while (*src)
-		*dst++ = *src++;
-	*dst = '\0';
-}
-
-char	*get_line(char **remainder)
+static char	*get_line(char **remainder)
 {
 	char	*line;
-	char	*newline_pos;
 	char	*temp;
 	size_t	len;
 
-	if (!(*remainder) || **remainder == '\0')
+	if (!(*remainder))
 		return (NULL);
-	newline_pos = ft_strchr(*remainder, '\n');
-	if (newline_pos)
+	temp = ft_strchr(*remainder, '\n');
+	if (temp)
 	{
-		len = newline_pos - *remainder + 1;
+		len = temp - *remainder + 1;
 		line = ft_strndup(*remainder, len);
-		if (!line)
-			return (NULL);
-		temp = ft_strdup(newline_pos + 1);
+		temp = ft_strdup(temp + 1);
 		free(*remainder);
 		*remainder = temp;
-		if (!*remainder)
-			return (NULL);
+		if (**remainder == '\0')
+		{
+			free(*remainder);
+			*remainder = NULL;
+		}
 		return (line);
 	}
-	line = *remainder;
+	line = ft_strdup(*remainder);
+	free(*remainder);
 	*remainder = NULL;
 	return (line);
 }
 
-char	*append_buffer(char *remainder, char *buf)
+static char	*append_buffer(char *remainder, char *buf)
 {
 	char	*temp;
 
 	if (!remainder)
-		return (ft_strdup(buf));
-	temp = ft_strjoin(remainder, buf);
-	free(remainder);
-	return (temp);
+		remainder = ft_strdup(buf);
+	else
+	{
+		temp = ft_strjoin(remainder, buf);
+		free(remainder);
+		remainder = temp;
+	}
+	return (remainder);
 }
 
 char	*get_next_line(int fd)
@@ -83,18 +69,17 @@ char	*get_next_line(int fd)
 	{
 		buf[read_bytes] = '\0';
 		remainder[fd] = append_buffer(remainder[fd], buf);
-		if (!remainder[fd])
-			return (NULL);
 		if (ft_strchr(remainder[fd], '\n'))
 			break ;
 		read_bytes = read(fd, buf, BUFFER_SIZE);
 	}
-	if (read_bytes == -1 || (read_bytes == 0 && (!remainder[fd]
-				|| remainder[fd][0] == '\0')))
+	if (read_bytes == -1)
 	{
 		free(remainder[fd]);
 		remainder[fd] = NULL;
 		return (NULL);
 	}
+	if (read_bytes == 0 && !remainder[fd])
+		return (NULL);
 	return (get_line(&remainder[fd]));
 }

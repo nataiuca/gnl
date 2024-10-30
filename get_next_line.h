@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: natferna <natferna@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 16:38:48 by natferna          #+#    #+#             */
-/*   Updated: 2024/10/30 01:35:18 by natferna         ###   ########.fr       */
+/*   Created: 2024/10/30 23:09:37 by natferna          #+#    #+#             */
+/*   Updated: 2024/10/31 00:10:06 by natferna         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,5 @@ char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strdup(const char *s);
 char	*ft_strchr(const char *s, int c);
 char	*ft_strndup(const char *s, size_t n);
-void	ft_strcpy(char *dst, const char *src);
-void	ft_strcat(char *dst, const char *src);
 
 #endif
